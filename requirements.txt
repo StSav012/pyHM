@@ -1,0 +1,10 @@
+QtPy
+QtAwesome
+
+# PySide6 >=6.1, !=6.8.0, !=6.8.0.1
+
+# PyQt5 >=5.15
+# PyQtChart >=5.15
+
+# PyQt6 >=6.1,
+# PyQt6-Charts
