@@ -572,14 +572,16 @@ class ThreadHM(QThread):
         self._emit_state(self.tr("Measurement is finished"))
 
     def __del__(self) -> None:
-        # `AttributeError` appears when crashed in `__init__`
-        # `RuntimeError` reads: wrapped C/C++ object of type ThreadHM has been deleted
-        with suppress(AttributeError, RuntimeError):
-            self.instant_di_ctrl.dispose()
-        with suppress(AttributeError, RuntimeError):
-            self.instant_do_ctrl.dispose()
-        with suppress(AttributeError, RuntimeError):
-            self.instant_ao.dispose()
-        with suppress(AttributeError, RuntimeError):
-            self.wf_ai_ctrl.dispose()
-        self._emit_state(self.tr("Disposed of the DAQ objects"))
+        # `RuntimeError`: wrapped C/C++ object of type ThreadHM has been deleted
+        #  appears when deleting the instance, using PyQt5/6
+        with suppress(RuntimeError):
+            # `AttributeError` appears when crashed in `__init__`
+            with suppress(AttributeError):
+                self.instant_di_ctrl.dispose()
+            with suppress(AttributeError):
+                self.instant_do_ctrl.dispose()
+            with suppress(AttributeError):
+                self.instant_ao.dispose()
+            with suppress(AttributeError):
+                self.wf_ai_ctrl.dispose()
+            self._emit_state(self.tr("Disposed of the DAQ objects"))
