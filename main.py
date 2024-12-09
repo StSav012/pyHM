@@ -2,9 +2,9 @@
 import sys
 from functools import partial
 from math import isnan
-from typing import Callable, Iterable
+from typing import Callable, Final, Iterable
 
-from qtpy.QtCore import QDateTime, QThread, Qt, Slot
+from qtpy.QtCore import QDateTime, QThread, Qt, Slot, qVersion
 from qtpy.QtGui import QCloseEvent, QKeySequence
 from qtpy.QtWidgets import (
     QApplication,
@@ -33,6 +33,10 @@ from thread_hm import ThreadHM
 
 _translate: Callable[[str, str], str] = QApplication.translate
 _translate("series name", "{}-Angle Method")
+
+_qt_version_info_: Final[tuple[int | str, ...]] = tuple(
+    map(lambda _w: int(_w) if _w.isdecimal() else _w, qVersion().split("."))
+)
 
 
 class TableWidget(QTableWidget):
@@ -103,9 +107,14 @@ class MainWindow(QMainWindow):
             series_visible_check: QCheckBox = QCheckBox(name, visibility_widget)
             self.series_visible_checks.append(series_visible_check)
             visibility_layout.addWidget(series_visible_check)
-            series_visible_check.checkStateChanged.connect(
-                partial(self.on_series_visibility_changed, index)
-            )
+            if _qt_version_info_ >= (6, 7):
+                series_visible_check.checkStateChanged.connect(
+                    partial(self.on_series_visibility_changed, index)
+                )
+            else:
+                series_visible_check.stateChanged.connect(
+                    partial(self.on_series_visibility_changed, index)
+                )
             series_visible_check.setChecked(True)
             for receiver in RECEIVERS:
                 self.charts[receiver].series(index).setName(name)
@@ -134,11 +143,18 @@ class MainWindow(QMainWindow):
         menu_view.addAction(controls_dock.toggleViewAction())
 
         menu_help: QMenu = menu_bar.addMenu(self.tr("&Help"))
-        menu_help.addAction(
-            self.tr("&About…"),
-            QKeySequence.StandardKey.HelpContents,
-            self.about,
-        )
+        if _qt_version_info_ >= (6, 3):
+            menu_help.addAction(
+                self.tr("&About…"),
+                QKeySequence.StandardKey.HelpContents,
+                self.about,
+            )
+        else:
+            menu_help.addAction(
+                self.tr("&About…"),
+                self.about,
+                QKeySequence.StandardKey.HelpContents,
+            )
         menu_help.addAction(
             self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMenuButton),
             self.tr("About &Qt…"),
