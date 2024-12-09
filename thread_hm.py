@@ -573,12 +573,13 @@ class ThreadHM(QThread):
 
     def __del__(self) -> None:
         # `AttributeError` appears when crashed in `__init__`
-        with suppress(AttributeError):
+        # `RuntimeError` reads: wrapped C/C++ object of type ThreadHM has been deleted
+        with suppress(AttributeError, RuntimeError):
             self.instant_di_ctrl.dispose()
-        with suppress(AttributeError):
+        with suppress(AttributeError, RuntimeError):
             self.instant_do_ctrl.dispose()
-        with suppress(AttributeError):
+        with suppress(AttributeError, RuntimeError):
             self.instant_ao.dispose()
-        with suppress(AttributeError):
+        with suppress(AttributeError, RuntimeError):
             self.wf_ai_ctrl.dispose()
         self._emit_state(self.tr("Disposed of the DAQ objects"))
