@@ -96,12 +96,12 @@ class Settings(QSettings):
                 ),
             },
             (self.tr("Time"), ("mdi6.clock-outline",)): {
-                self.tr("Measurement start:"): Settings.CallbackOnly(
-                    Settings.date_time_start.fset.__name__
-                ),
-                self.tr("Measurement end:"): Settings.CallbackOnly(
-                    Settings.date_time_stop.fset.__name__
-                ),
+                # self.tr("Measurement start:"): Settings.CallbackOnly(
+                #     Settings.date_time_start.fset.__name__
+                # ),
+                # self.tr("Measurement end:"): Settings.CallbackOnly(
+                #     Settings.date_time_stop.fset.__name__
+                # ),
                 self.tr("Delay between cycles:"): Settings.SpinboxAndCallback(
                     range=(0.0, 1e14),
                     prefix_and_suffix=("", self.tr(" sec")),
@@ -360,25 +360,25 @@ class Settings(QSettings):
         with self.section("Настройки"):
             self.setValue("Путь сохранения результата", result_dir)
 
-    @property
-    def date_time_start(self) -> QDateTime:
-        with self.section("Время измерения"):
-            return self.value("Старт", QDateTime.currentDateTime())
-
-    @date_time_start.setter
-    def date_time_start(self, date_time_start: QDateTime) -> None:
-        with self.section("Время измерения"):
-            self.setValue("Старт", date_time_start)
-
-    @property
-    def date_time_stop(self) -> QDateTime:
-        with self.section("Время измерения"):
-            return self.value("Стоп", QDateTime.currentDateTime().addDays(1))
-
-    @date_time_stop.setter
-    def date_time_stop(self, date_time_stop: QDateTime) -> None:
-        with self.section("Время измерения"):
-            self.setValue("Стоп", date_time_stop)
+    # @property
+    # def date_time_start(self) -> QDateTime:
+    #     with self.section("Время измерения"):
+    #         return self.value("Старт", QDateTime.currentDateTime())
+    #
+    # @date_time_start.setter
+    # def date_time_start(self, date_time_start: QDateTime) -> None:
+    #     with self.section("Время измерения"):
+    #         self.setValue("Старт", date_time_start)
+    #
+    # @property
+    # def date_time_stop(self) -> QDateTime:
+    #     with self.section("Время измерения"):
+    #         return self.value("Стоп", QDateTime.currentDateTime().addDays(1))
+    #
+    # @date_time_stop.setter
+    # def date_time_stop(self, date_time_stop: QDateTime) -> None:
+    #     with self.section("Время измерения"):
+    #         self.setValue("Стоп", date_time_stop)
 
     @property
     def clouds(self) -> str:

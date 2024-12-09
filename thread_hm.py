@@ -173,8 +173,8 @@ class ThreadHM(QThread):
         if not angles:
             self._emit_state(self.tr("Error: no angles provided"))
             return
-        date_time_start: Final[QDateTime] = self.settings.date_time_start
-        date_time_stop: Final[QDateTime] = self.settings.date_time_stop
+        # date_time_start: Final[QDateTime] = self.settings.date_time_start
+        # date_time_stop: Final[QDateTime] = self.settings.date_time_stop
         cycle_count: Final[int] = self.settings.cycle_count
         channel_count: Final[int] = self.settings.channel_count
         sample_count: Final[int] = self.settings.sample_count
@@ -237,23 +237,23 @@ class ThreadHM(QThread):
         self.dataFileChanged.emit(file_data.fileName())
 
         # Время начала измерения
-        while (
-            not self.isInterruptionRequested()
-            and date_time_start > QDateTime.currentDateTime()
-        ):
-            self._emit_state(
-                self.tr("Measurement will start at {}").format(
-                    date_time_start.toString()
-                )
-            )
-            QThread.sleep(1)
+        # while (
+        #     not self.isInterruptionRequested()
+        #     and date_time_start > QDateTime.currentDateTime()
+        # ):
+        #     self._emit_state(
+        #         self.tr("Measurement will start at {}").format(
+        #             date_time_start.toString()
+        #         )
+        #     )
+        #     QThread.sleep(1)
 
         ret: ErrorCode
 
         # Основной цикл...
-        while not self.isInterruptionRequested() and date_time_stop > (
+        while not self.isInterruptionRequested() and (
             now := QDateTime.currentDateTime()
-        ):
+        ):  # < date_time_stop
             # Мотор -> 0
             self._emit_state(self.tr("Mirror → “0”"))
             self.motor_find_zero()
