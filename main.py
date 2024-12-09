@@ -241,6 +241,15 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    from qtpy import PYQT_VERSION
+
+    if PYQT_VERSION:
+
+        class QApplication(QApplication):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.__class__._instance = QApplication.instance()
+
     QApplication(sys.argv)
     QApplication.setApplicationName("HM")
     w: MainWindow = MainWindow()
