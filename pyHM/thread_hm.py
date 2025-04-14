@@ -232,6 +232,7 @@ class ThreadHM(QThread):
                 << "\t"
             )
         file_data_stream << "Описание" << linesep
+        file_data_stream.flush()
 
         self.dataFileChanged.emit(file_data.fileName())
 
@@ -543,6 +544,7 @@ class ThreadHM(QThread):
                     << "\t"
                 )
             file_data_stream << description << linesep
+            file_data_stream.flush()
 
             # данные на форму
             for receiver in RECEIVERS:
