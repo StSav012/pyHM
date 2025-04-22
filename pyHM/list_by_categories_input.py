@@ -69,7 +69,7 @@ class ListByCategoriesInput[T](QWidget):
     @Slot()
     def _on_editing_finished(self) -> None:
         self._data[self.sender().property("key")] = cast(
-            ListInput[float], self.sender()
+            ListInput[T], self.sender()
         ).data()
         self.changed.emit(self._data)
 
