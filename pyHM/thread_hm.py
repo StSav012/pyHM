@@ -336,8 +336,6 @@ class ThreadHM(QThread):
                             )
                             if self._is_error_occurred(ret):
                                 return
-                            if not data_piece:
-                                logger.error("No data received")
                             data.extend(data_piece)
                             logger.debug(
                                 f"Got {len(data) / channel_count * sample_count:.2%} of data"
