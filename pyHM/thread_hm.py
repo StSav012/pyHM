@@ -302,6 +302,7 @@ class ThreadHM(QThread):
                     )
                     # полупериоды
                     for period in (0, 1):
+                        logger.debug(f"Period {period}")
                         # установка напряжения ЦАПов
                         ret = self.instant_ao.writeAny(
                             0,
