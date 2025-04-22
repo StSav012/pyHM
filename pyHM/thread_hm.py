@@ -2,7 +2,7 @@ import logging
 import traceback
 from contextlib import suppress
 from math import cos, exp, isnan, log, nan, radians
-from os import linesep
+from os import getenv, linesep
 from typing import ClassVar, Final
 
 from qtpy.QtCore import (
@@ -43,7 +43,11 @@ __all__ = ["ThreadHM"]
 sectionLength = 1024
 
 logger: logging.Logger = logging.getLogger("ThreadHM")
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.getLevelNamesMapping().get(
+        getenv("LOG_LEVEL", "").upper(), logging.INFO
+    )
+)
 
 
 class ThreadHM(QThread):
