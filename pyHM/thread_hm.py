@@ -192,6 +192,7 @@ class ThreadHM(QThread):
         result_dir: Final[QDir] = self.settings.result_dir
         altitude: Final[float] = self.settings.elevation
         interval: Final[float] = self.settings.interval
+        clock_rate: Final[float] = self.wf_ai_ctrl.conversion.clockRate
 
         if not result_dir.exists():
             parents: list[str] = [result_dir.dirName()]
@@ -327,12 +328,14 @@ class ThreadHM(QThread):
                             ret = self.wf_ai_ctrl.start()
                             if self._is_error_occurred(ret):
                                 return
+                            remainder: int = channel_count * sample_count - len(data)
                             (
                                 ret,
                                 data_piece,
                                 *_,
                             ) = self.wf_ai_ctrl.getDataF64(
-                                channel_count * sample_count - len(data), -1
+                                remainder,
+                                round(2000 * clock_rate / remainder),  # [ms]
                             )
                             if self._is_error_occurred(ret):
                                 return
