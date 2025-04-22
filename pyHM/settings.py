@@ -17,6 +17,7 @@ from .constants import (
     DEFAULT_DELAY_BETWEEN_CYCLES,
     DEFAULT_MOTOR_STEP_ANGLE,
     RECEIVERS,
+    RECEIVER_MARK_TYPE,
     WAVELENGTHS,
 )
 from .location import (
@@ -288,8 +289,8 @@ class Settings(QSettings):
     #         self.setValue("Количество каналов", channel_count)
 
     @property
-    def dac(self) -> dict[int, list[float]]:
-        dac: dict[int, list[float]] = {}
+    def dac(self) -> dict[RECEIVER_MARK_TYPE, list[float]]:
+        dac: dict[RECEIVER_MARK_TYPE, list[float]] = {}
         with self.section("ЦАП"):
             for receiver, wavelength in zip(RECEIVERS, WAVELENGTHS, strict=True):
                 if receiver not in dac:
@@ -301,7 +302,7 @@ class Settings(QSettings):
         return dac
 
     @dac.setter
-    def dac(self, dac: dict[int, list[float]]) -> None:
+    def dac(self, dac: dict[RECEIVER_MARK_TYPE, list[float]]) -> None:
         with self.section("ЦАП"):
             for receiver, wavelength in zip(RECEIVERS, WAVELENGTHS, strict=True):
                 for i, _d in enumerate(dac.get(receiver, ())):

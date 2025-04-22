@@ -28,6 +28,7 @@ from .constants import (
     DO_DIRECTION,
     DO_MOTOR_STEP_PULSE,
     RECEIVERS,
+    RECEIVER_MARK_TYPE,
     WAVELENGTHS,
     DEVICE_DESCRIPTION,
     PHI_H2O_CAL,
@@ -52,8 +53,10 @@ logging.basicConfig(
 
 class ThreadHM(QThread):
     stateChanged: ClassVar[Signal] = Signal(str, int, int)
-    dataObtained: ClassVar[Signal] = Signal(int, int, float)
-    absorptionCalculated: ClassVar[Signal] = Signal(QDateTime, int, float, float)
+    dataObtained: ClassVar[Signal] = Signal(RECEIVER_MARK_TYPE, int, float)
+    absorptionCalculated: ClassVar[Signal] = Signal(
+        QDateTime, RECEIVER_MARK_TYPE, float, float
+    )
     dataFileChanged: ClassVar[Signal] = Signal(str)
 
     def __init__(self, settings: Settings, parent: QObject | None = None) -> None:
@@ -78,7 +81,7 @@ class ThreadHM(QThread):
 
         # инициализация ЦАП
         self.instant_ao: InstantAOCtrl = InstantAOCtrl(DEVICE_DESCRIPTION)
-        self._dac: Final[dict[int, list[float]]] = self.settings.dac
+        self._dac: Final[dict[RECEIVER_MARK_TYPE, list[float]]] = self.settings.dac
         for receiver, channel in zip(RECEIVERS, self.instant_ao.channels):
             # find best output range
             min_dac: float = min(self._dac[receiver])
@@ -267,15 +270,15 @@ class ThreadHM(QThread):
             self.motor_find_zero()
             QThread.sleep(1)
 
-            data_sd: dict[int, list[float]] = {0: [], 1: []}
-            data_mean: dict[int, list[float]] = {0: [], 1: []}
-            data_res: dict[int, float] = {0: nan, 1: nan}
-            tau0: dict[int, float] = {0: nan, 1: nan}
-            d_tau: dict[int, float] = {0: nan, 1: nan}
-            lnk_tav_t_rel: dict[int, float] = {0: nan, 1: nan}
-            d_lnk_tav_t_rel: dict[int, float] = {0: nan, 1: nan}
-            tau_o2: dict[int, float] = {0: nan, 1: nan}
-            q_g_per_sm2: dict[int, float] = {0: nan, 1: nan}
+            data_sd: dict[RECEIVER_MARK_TYPE, list[float]] = {"0": [], "1": []}
+            data_mean: dict[RECEIVER_MARK_TYPE, list[float]] = {"0": [], "1": []}
+            data_res: dict[RECEIVER_MARK_TYPE, float] = {"0": nan, "1": nan}
+            tau0: dict[RECEIVER_MARK_TYPE, float] = {"0": nan, "1": nan}
+            d_tau: dict[RECEIVER_MARK_TYPE, float] = {"0": nan, "1": nan}
+            lnk_tav_t_rel: dict[RECEIVER_MARK_TYPE, float] = {"0": nan, "1": nan}
+            d_lnk_tav_t_rel: dict[RECEIVER_MARK_TYPE, float] = {"0": nan, "1": nan}
+            tau_o2: dict[RECEIVER_MARK_TYPE, float] = {"0": nan, "1": nan}
+            q_g_per_sm2: dict[RECEIVER_MARK_TYPE, float] = {"0": nan, "1": nan}
             for index, angle in enumerate(angles):
                 if self.isInterruptionRequested():
                     break
@@ -369,7 +372,7 @@ class ThreadHM(QThread):
 
                     mean = [
                         sum(
-                            sum(d_cycle[receiver::channel_count])
+                            sum(d_cycle[int(receiver) :: channel_count])
                             / (len(d_cycle) // channel_count)
                             for d_cycle in data_adc[period]
                         )
@@ -522,7 +525,7 @@ class ThreadHM(QThread):
                 tau_o2[receiver] = TAU_O2_CAL[receiver] * exp(
                     -(altitude - ELEVATION_CAL) / ATMOSPHERE_THICKNESS_O2
                 )
-                q_g_per_sm2[receiver] = (tau0[receiver] - tau_o2[1]) / PHI_H2O_CAL[
+                q_g_per_sm2[receiver] = (tau0[receiver] - tau_o2["1"]) / PHI_H2O_CAL[
                     receiver
                 ]
 

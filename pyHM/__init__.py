@@ -25,7 +25,7 @@ from qtpy.QtWidgets import (
 )
 
 from .chart_widget import ChartWidget
-from .constants import RECEIVERS, WAVELENGTHS
+from .constants import RECEIVERS, RECEIVER_MARK_TYPE, WAVELENGTHS
 from .preferences import Preferences
 from .settings import Settings
 from .thread_hm import ThreadHM
@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
         layout: QVBoxLayout = QVBoxLayout()
         central_widget.setLayout(layout)
 
-        self.charts: dict[int, ChartWidget] = {}
+        self.charts: dict[RECEIVER_MARK_TYPE, ChartWidget] = {}
         for receiver, wavelength in zip(RECEIVERS, WAVELENGTHS, strict=True):
             chart = self.charts[receiver] = ChartWidget(self)
             layout.addWidget(chart)
@@ -215,25 +215,25 @@ class MainWindow(QMainWindow):
             self.progress_bar.minimum() != self.progress_bar.maximum()
         )
 
-    @Slot(int, int, float)
+    @Slot(RECEIVER_MARK_TYPE, int, float)
     def _on_thread_data_obtained(
         self,
-        receiver: int,
+        receiver: RECEIVER_MARK_TYPE,
         angle_index: int,
         data_mean: float,
     ) -> None:
         self.voltage_table.setItem(
             angle_index,
-            receiver,
+            int(receiver),
             QTableWidgetItem(self.locale().toString(data_mean, "g", 4)),
         )
         self.voltage_table.resizeColumnsToContents()
 
-    @Slot(QDateTime, int, float, float)
+    @Slot(QDateTime, RECEIVER_MARK_TYPE, float, float)
     def _on_thread_absorption_calculated(
         self,
         time: QDateTime,
-        receiver: int,
+        receiver: RECEIVER_MARK_TYPE,
         data_res: float,
         tau0: float,
     ) -> None:
