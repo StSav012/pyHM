@@ -128,14 +128,18 @@ class ThreadHM(QThread):
         ret, data = self.instant_di_ctrl.readBit(0, bit_num)
         if self._is_error_occurred(ret):
             return False
+        logger.debug(f"Read data {data} from bit #{bit_num}")
         return bool(data)
 
     def set_do_bit(self, bit_num: int, value: bool) -> None:
+        logger.debug(f"Writing data {value} to bit #{bit_num}")
         ret: ErrorCode = self.instant_do_ctrl.writeBit(0, bit_num, value)
         self._is_error_occurred(ret)
 
     def motor_get_zero(self) -> bool:
-        return self.get_di_bit(DI_MOTOR_ZERO)
+        v: bool = self.get_di_bit(DI_MOTOR_ZERO)
+        logger.debug(f"At zero? {v}")
+        return v
 
     def motor_step(self, direction: bool) -> None:
         # Направление
