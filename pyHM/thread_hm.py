@@ -163,6 +163,7 @@ class ThreadHM(QThread):
             if self.motor_get_zero():
                 self.motor_position = -self.settings.angle_correction
                 self.motor_set_angle(0)
+                break
             else:
                 self.motor_step(True)
 
