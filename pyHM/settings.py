@@ -127,6 +127,13 @@ class Settings(QSettings):
                     prefix_and_suffix=("", self.tr("°")),
                     callback=Settings.angle_correction.fset.__name__,
                 ),
+                self.tr("Zero angle signal:"): Settings.ComboboxAndCallback(
+                    {
+                        False: self.tr("LOW"),
+                        True: self.tr("HIGH"),
+                    },
+                    Settings.zero_angle_signal.fset.__name__,
+                ),
             },
             (self.tr("ADC"), ("mdi6.gauge",)): {
                 self.tr("Samples per half a period:"): Settings.SpinboxAndCallback(
@@ -327,6 +334,16 @@ class Settings(QSettings):
     def angle_correction(self, angle_correction: float) -> None:
         with self.section("Двигатель"):
             self.setValue("Угол коррекции", angle_correction)
+
+    @property
+    def zero_angle_signal(self) -> bool:
+        with self.section("Двигатель"):
+            return self.value("Сигнал нулевого угла", False, bool)
+
+    @zero_angle_signal.setter
+    def zero_angle_signal(self, zero_angle_signal: bool) -> None:
+        with self.section("Двигатель"):
+            self.setValue("Сигнал нулевого угла", zero_angle_signal)
 
     @property
     def cycle_count(self) -> int:

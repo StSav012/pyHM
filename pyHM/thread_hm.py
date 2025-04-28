@@ -140,7 +140,7 @@ class ThreadHM(QThread):
         self._is_error_occurred(ret)
 
     def motor_get_zero(self) -> bool:
-        v: bool = self.get_di_bit(DI_MOTOR_ZERO)
+        v: bool = self.get_di_bit(DI_MOTOR_ZERO) == self.settings.zero_angle_signal
         logger.debug(f"At zero? {v}")
         return v
 
