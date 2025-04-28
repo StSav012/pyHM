@@ -2,10 +2,10 @@ from _ctypes import Array
 from typing import Any
 
 from . import (
-    AISignalType,
     AccessMode,
     ActiveSignal,
     AIChannelType,
+    AISignalType,
     BaudRate,
     BurnoutRetType,
     CodingType,

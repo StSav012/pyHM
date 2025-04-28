@@ -1,8 +1,8 @@
 from _ctypes import Array
 from ctypes import POINTER, c_double, c_int32
 
-from . import c_uint_, dll
 from .. import MapFuncPiece
+from . import c_uint_, dll
 
 __all__ = [
     "get_channel",

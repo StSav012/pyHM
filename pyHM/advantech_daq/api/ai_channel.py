@@ -1,8 +1,8 @@
 from _ctypes import Array
 from ctypes import POINTER, c_double, c_int, c_int32, c_wchar, c_wchar_p
 
-from . import c_uint_, dll
 from .. import MapFuncPiece
+from . import c_uint_, dll
 
 __all__ = [
     "get_burn_short_ret_value",

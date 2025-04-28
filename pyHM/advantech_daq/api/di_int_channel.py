@@ -1,4 +1,4 @@
-from ctypes import c_int32, c_int8
+from ctypes import c_int8, c_int32
 
 from . import c_uint_, dll
 

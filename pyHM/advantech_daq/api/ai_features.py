@@ -1,9 +1,9 @@
 # noinspection PyProtectedMember
 from _ctypes import _Pointer
-from ctypes import POINTER, c_double, c_int, c_int32, c_int8
+from ctypes import POINTER, c_double, c_int, c_int8, c_int32
 
-from . import c_uint_, dll
 from .. import MathInterval
+from . import c_uint_, dll
 
 __all__ = [
     "get_bridge_resistances",

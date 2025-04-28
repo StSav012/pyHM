@@ -4,6 +4,7 @@ import platform
 # noinspection PyProtectedMember
 from _ctypes import Array, _Pointer
 from ctypes import (
+    CDLL,
     POINTER,
     c_int32,
     c_uint32,
@@ -11,7 +12,6 @@ from ctypes import (
     c_ulong,
     c_wchar,
     c_wchar_p,
-    CDLL,
     create_unicode_buffer,
 )
 

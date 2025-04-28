@@ -3,7 +3,7 @@ from functools import partial
 from math import isnan
 from typing import Callable, Final, Iterable
 
-from qtpy.QtCore import QDateTime, QThread, Qt, Slot, qVersion
+from qtpy.QtCore import QDateTime, Qt, QThread, Slot, qVersion
 from qtpy.QtGui import QCloseEvent, QKeySequence
 from qtpy.QtWidgets import (
     QApplication,
@@ -25,7 +25,7 @@ from qtpy.QtWidgets import (
 )
 
 from .chart_widget import ChartWidget
-from .constants import RECEIVERS, RECEIVER_MARK_TYPE, WAVELENGTHS
+from .constants import RECEIVER_MARK_TYPE, RECEIVERS, WAVELENGTHS
 from .preferences import Preferences
 from .settings import Settings
 from .thread_hm import ThreadHM
@@ -258,8 +258,8 @@ class MainWindow(QMainWindow):
 
 
 def run_gui() -> int:
-    from qtpy.QtWidgets import QApplication
     from qtpy import PYQT_VERSION
+    from qtpy.QtWidgets import QApplication
 
     if PYQT_VERSION:
         # noinspection PyShadowingNames

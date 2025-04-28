@@ -11,9 +11,9 @@ from qtpy.QtCore import (
     QFile,
     QIODevice,
     QObject,
+    Qt,
     QTextStream,
     QThread,
-    Qt,
     Signal,
 )
 
@@ -24,17 +24,17 @@ from .advantech_daq.instant_di_ctrl import InstantDICtrl
 from .advantech_daq.instant_do_ctrl import InstantDoCtrl
 from .advantech_daq.waveform_ai_ctrl import WaveformAICtrl
 from .constants import (
+    ATMOSPHERE_THICKNESS_O2,
+    DEVICE_DESCRIPTION,
     DI_MOTOR_ZERO,
     DO_DIRECTION,
     DO_MOTOR_STEP_PULSE,
-    RECEIVERS,
-    RECEIVER_MARK_TYPE,
-    WAVELENGTHS,
-    DEVICE_DESCRIPTION,
-    PHI_H2O_CAL,
     ELEVATION_CAL,
-    ATMOSPHERE_THICKNESS_O2,
+    PHI_H2O_CAL,
+    RECEIVER_MARK_TYPE,
+    RECEIVERS,
     TAU_O2_CAL,
+    WAVELENGTHS,
 )
 from .numeric import tau_by_min_square_method_kd
 from .settings import Settings

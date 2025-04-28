@@ -4,20 +4,20 @@ from os import linesep
 from typing import Hashable, Iterable, Iterator, NamedTuple, Sequence
 
 from qtpy.QtCore import (
+    QByteArray,
+    QCoreApplication,
     QDateTime,
     QDir,
     QObject,
     QSettings,
-    QByteArray,
-    QCoreApplication,
 )
 from qtpy.QtWidgets import QWidget
 
 from .constants import (
     DEFAULT_DELAY_BETWEEN_CYCLES,
     DEFAULT_MOTOR_STEP_ANGLE,
-    RECEIVERS,
     RECEIVER_MARK_TYPE,
+    RECEIVERS,
     WAVELENGTHS,
 )
 from .location import (

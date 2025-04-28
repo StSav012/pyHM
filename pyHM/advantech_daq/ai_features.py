@@ -1,8 +1,8 @@
 from ctypes import byref, pointer
 
 from . import (
-    AISignalType,
     AIChannelType,
+    AISignalType,
     BurnoutRetType,
     CouplingType,
     FilterType,

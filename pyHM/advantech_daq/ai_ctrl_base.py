@@ -1,6 +1,6 @@
 from . import Scenario
-from .ai_features import AIFeatures
 from .ai_channel import AIChannel
+from .ai_features import AIFeatures
 from .api import ai_ctrl_base, array
 from .daq_ctrl_base import DAQCtrlBase
 

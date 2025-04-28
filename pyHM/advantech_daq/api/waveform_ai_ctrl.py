@@ -1,8 +1,8 @@
 from _ctypes import Array
 from ctypes import POINTER, c_double, c_int16, c_int32, c_void_p
 
-from . import c_uint_, dll
 from .. import DataMark
+from . import c_uint_, dll
 
 __all__ = [
     "get_data",

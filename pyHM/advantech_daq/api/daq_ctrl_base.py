@@ -1,7 +1,7 @@
 from ctypes import POINTER, byref, c_int32, c_void_p, c_wchar_p
 
-from . import c_uint_, dll
 from .. import DeviceInformation
+from . import c_uint_, dll
 
 __all__ = [
     "create",

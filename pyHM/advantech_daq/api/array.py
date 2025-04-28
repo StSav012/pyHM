@@ -1,11 +1,10 @@
 from ctypes import POINTER, c_byte, c_int, c_int32, c_int64, cast
 from typing import Callable
 
-from . import c_uint_, dll
 from .. import (
-    AISignalType,
     AccessMode,
     ActiveSignal,
+    AISignalType,
     BurnoutRetType,
     CounterCapability,
     CounterCascadeGroup,
@@ -26,6 +25,7 @@ from .. import (
     ValueRange,
     utils,
 )
+from . import c_uint_, dll
 
 __all__ = [
     "dispose",

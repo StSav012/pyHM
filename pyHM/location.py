@@ -1,8 +1,8 @@
-from json import loads
 from contextlib import suppress
+from datetime import datetime, timedelta, timezone, tzinfo
+from json import loads
 from typing import Iterable, TypedDict, cast
 from urllib.request import urlopen
-from datetime import datetime, timedelta, timezone, tzinfo
 
 __all__ = [
     "guess_weather",

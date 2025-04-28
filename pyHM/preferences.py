@@ -4,8 +4,8 @@ from logging import Logger, getLogger
 from math import ceil, floor
 from typing import Any, ClassVar, Hashable, Self, cast
 
-from qtpy.QtGui import QIcon
 from qtpy.QtCore import QDateTime, QDir, Qt
+from qtpy.QtGui import QIcon
 from qtpy.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -14,6 +14,7 @@ from qtpy.QtWidgets import (
     QDialogButtonBox,
     QDoubleSpinBox,
     QFormLayout,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QScrollArea,
@@ -22,7 +23,6 @@ from qtpy.QtWidgets import (
     QStackedWidget,
     QVBoxLayout,
     QWidget,
-    QLineEdit,
 )
 
 from .list_by_categories_input import ListByCategoriesInput, ListInput
