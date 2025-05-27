@@ -2,7 +2,7 @@ import logging
 import traceback
 from contextlib import suppress
 from math import cos, exp, isnan, log, nan, radians
-from os import getenv, linesep
+from os import getenv
 from typing import ClassVar, Final
 
 from qtpy.QtCore import (
@@ -220,8 +220,8 @@ class ThreadHM(QThread):
             return
 
         file_data_stream: QTextStream = QTextStream(file_data)
-        file_data_stream << self.settings.toString() << linesep
-        file_data_stream << "[Данные]" << linesep
+        file_data_stream << self.settings.toString() << "\n"
+        file_data_stream << "[Данные]" << "\n"
         for wavelength in WAVELENGTHS:
             (
                 file_data_stream
@@ -244,7 +244,7 @@ class ThreadHM(QThread):
                 )
                 << "\t"
             )
-        file_data_stream << "Описание" << linesep
+        file_data_stream << "Описание" << "\n"
         file_data_stream.flush()
 
         self.dataFileChanged.emit(file_data.fileName())
@@ -418,12 +418,12 @@ class ThreadHM(QThread):
                                                 sample * sample_count + channel
                                             ]
                                         )
-                                    file_adc_stream << "\t".join(str_buf) << linesep
+                                    file_adc_stream << "\t".join(str_buf) << "\n"
 
                         (
                             file_adc_stream
                             << "\t".join(("Receiver", "Angle", "SD", "Mean"))
-                            << linesep
+                            << "\n"
                         )
 
                         for receiver in RECEIVERS:
@@ -440,7 +440,7 @@ class ThreadHM(QThread):
                                         ),
                                     )
                                 )
-                                << linesep
+                                << "\n"
                             )
 
                         file_adc.close()
@@ -562,7 +562,7 @@ class ThreadHM(QThread):
                     << "\t".join(map(lambda x: "%5.4e" % x, data_sd[receiver]))
                     << "\t"
                 )
-            file_data_stream << description << linesep
+            file_data_stream << description << "\n"
             file_data_stream.flush()
 
             # данные на форму
