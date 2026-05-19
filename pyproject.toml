@@ -6,7 +6,7 @@ name = 'pyHM'
 authors = [
     {name = 'StSav012', email = 'stsav012@gmail.com'},
 ]
-description = 'VeriCold logfiles plotter'
+description = 'Humidity Meter'
 readme = 'README.md'
 license = 'LGPL-3.0-or-later'
 requires-python = '>=3.8'
