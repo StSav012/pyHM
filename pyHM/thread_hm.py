@@ -104,6 +104,9 @@ class ThreadHM(QThread):
         self.instant_di_ctrl: InstantDICtrl = InstantDICtrl(DEVICE_DESCRIPTION)
         self.instant_do_ctrl: InstantDoCtrl = InstantDoCtrl(DEVICE_DESCRIPTION)
 
+        self._is_paused: bool = False
+        self._is_last_loop: bool = False
+
         self._emit_state(self.tr("Initialized"))
 
     def _is_error_occurred(self, ret: ErrorCode) -> bool:
@@ -178,6 +181,15 @@ class ThreadHM(QThread):
         # вращение
         for i in range(step_count):
             self.motor_step(direction)
+
+    def pause(self, pause: bool = True) -> None:
+        self._is_paused = pause
+
+    def resume(self, resume: bool = True) -> None:
+        self._is_paused = not resume
+
+    def make_last_loop(self, last_loop: bool = True) -> None:
+        self._is_last_loop = last_loop
 
     def run(self) -> None:
         angles: Final[list[float]] = self.settings.angles
@@ -264,9 +276,9 @@ class ThreadHM(QThread):
         ret: ErrorCode
 
         # Основной цикл...
-        while not self.isInterruptionRequested() and (
-            now := QDateTime.currentDateTime()
-        ):  # < date_time_stop
+        while not self.isInterruptionRequested() and not self._is_last_loop and (
+            now := QDateTime.currentDateTime()  # < date_time_stop
+        ):
             # Мотор -> 0
             self._emit_state(self.tr("Mirror → “0”"))
             self.motor_find_zero()
@@ -450,6 +462,10 @@ class ThreadHM(QThread):
                                 file_adc.error(), file_adc.errorString()
                             )
                         )
+
+                while self._is_paused:
+                    QThread.sleep(16)
+
             # углы измерения
 
             if self.isInterruptionRequested():

@@ -137,6 +137,14 @@ class MainWindow(QMainWindow):
         controls_dock.setWidget(controls_widget)
         controls_layout: QHBoxLayout = QHBoxLayout()
         controls_widget.setLayout(controls_layout)
+        self.pause_button: QPushButton = QPushButton(self.tr("&Pause"), self)
+        self.pause_button.setCheckable(True)
+        controls_layout.addWidget(self.pause_button)
+        self.pause_button.toggled.connect(self._on_pause_button_toggled)
+        self.stop_soon_button: QPushButton = QPushButton(self.tr("&Last Loop"), self)
+        self.stop_soon_button.setCheckable(True)
+        controls_layout.addWidget(self.stop_soon_button)
+        self.stop_soon_button.toggled.connect(self._on_stop_soon_button_toggled)
         self.stop_button: QPushButton = QPushButton(self.tr("&Stop"), self)
         controls_layout.addWidget(self.stop_button)
         self.stop_button.clicked.connect(self._on_stop_button_clicked)
@@ -192,6 +200,14 @@ class MainWindow(QMainWindow):
     def _on_thread_finished(self) -> None:
         self.stop_button.setDisabled(True)
         self.status_bar.showMessage(self.tr("Measurement ended."))
+
+    @Slot()
+    def _on_pause_button_toggled(self, on: bool) -> None:
+        self.thread_hm.pause(on)
+
+    @Slot()
+    def _on_stop_soon_button_toggled(self, on: bool) -> None:
+        self.thread_hm.make_last_loop(on)
 
     @Slot()
     def _on_stop_button_clicked(self) -> None:
