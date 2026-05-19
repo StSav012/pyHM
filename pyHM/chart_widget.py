@@ -20,7 +20,7 @@ class ChartWidget(QChartView):
 
         self.value_axis: QValueAxis = QValueAxis()
         self.value_axis.setTickCount(6)
-        self.value_axis.setTitleText(self.tr("τ (Nep)"))
+        self.value_axis.setTitleText(self.tr("τ (Np)"))
 
         chart.addAxis(self.time_axis, Qt.AlignmentFlag.AlignBottom)
         chart.addAxis(self.value_axis, Qt.AlignmentFlag.AlignLeading)
