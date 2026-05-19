@@ -12,7 +12,7 @@ __all__ = ["WaveformAICtrl"]
 
 
 class WaveformAICtrl(AICtrlBase):
-    def __init__(self, dev_info: str, profile_path: str = ""):
+    def __init__(self, dev_info: str, profile_path: str = "") -> None:
         self._conversion: Conversion | None = None
         self._record: Record | None = None
         self._triggers: list[Trigger] = []
@@ -111,11 +111,9 @@ class WaveformAICtrl(AICtrlBase):
         data_arr: Array[c_int16] | Array[c_int32] | Array[c_double] = (dtype * count)()
 
         returned: Array[c_int] = (c_int * 1)()
-        start_time_clock: Array[c_double] | None
-        if startTime is not None:
-            start_time_clock = (c_double * 1)(startTime)
-        else:
-            start_time_clock = None
+        start_time_clock: Array[c_double] | None = (
+            (c_double * 1)(startTime) if startTime is not None else None
+        )
 
         mark_buf_tmp: Array[DataMark] | None
         mark_count_tmp: Array[c_int32] | None

@@ -1,5 +1,6 @@
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import suppress
-from typing import Any, Callable, ClassVar, Iterable, Iterator, Type, cast
+from typing import Any, ClassVar, cast
 
 from qtpy.QtCore import Signal, Slot
 from qtpy.QtWidgets import QFormLayout, QLineEdit, QWidget
@@ -13,12 +14,12 @@ class ListInput[T](QLineEdit):
     def __init__(
         self,
         values: Iterable[T],
-        value_type: Type[T],
+        value_type: type[T],
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
 
-        self._value_type: Type[T] = value_type
+        self._value_type: type[T] = value_type
         self._values: list[T] = list(values)
 
         self.setText("; ".join(map(str, values)))
@@ -50,13 +51,13 @@ class ListByCategoriesInput[T](QWidget):
     def __init__(
         self,
         data: dict[Any, Iterable[T]],
-        value_type: Type[T],
+        value_type: type[T],
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
 
         self._data: dict[Any, Iterable[T]] = data.copy()
-        self._value_type: Type[T] = value_type
+        self._value_type: type[T] = value_type
 
         layout: QFormLayout = QFormLayout()
         self.setLayout(layout)

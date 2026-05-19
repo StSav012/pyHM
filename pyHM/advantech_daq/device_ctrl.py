@@ -225,10 +225,7 @@ class DeviceCtrl:
         ret: ErrorCode = ErrorCode.lookup(
             device_ctrl.get_hw_specific(self._obj, name, p_size, data_array)
         )
-        if ret == ErrorCode.Success:
-            data = data_array[0]
-        else:
-            data = None
+        data = data_array[0] if ret == ErrorCode.Success else None
         return ret, data
 
     def setHwSpecific(self, name: Array[c_wchar], data: int) -> ErrorCode:

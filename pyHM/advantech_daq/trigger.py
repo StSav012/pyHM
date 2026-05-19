@@ -12,7 +12,7 @@ __all__ = ["Trigger"]
 
 
 class Trigger:
-    def __init__(self, native_trig_obj: int):
+    def __init__(self, native_trig_obj: int) -> None:
         self._obj: int = native_trig_obj
 
     @property

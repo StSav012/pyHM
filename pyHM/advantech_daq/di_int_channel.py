@@ -14,7 +14,7 @@ class DIIntChannel:
 
     @property
     def enabled(self) -> bool:
-        return True if di_int_channel.get_enabled(self._obj) else False
+        return bool(di_int_channel.get_enabled(self._obj))
 
     @enabled.setter
     def enabled(self, value: bool) -> None:
@@ -28,7 +28,7 @@ class DIIntChannel:
 
     @property
     def gated(self) -> bool:
-        return True if di_int_channel.get_gated(self._obj) else False
+        return bool(di_int_channel.get_gated(self._obj))
 
     @gated.setter
     def gated(self, value: bool) -> None:

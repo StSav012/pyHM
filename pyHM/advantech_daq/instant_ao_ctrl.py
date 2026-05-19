@@ -1,6 +1,6 @@
 from _ctypes import Array
+from collections.abc import Iterable
 from ctypes import c_double
-from typing import Iterable
 
 from . import ErrorCode, Scenario
 from .ao_ctrl_base import AOCtrlBase

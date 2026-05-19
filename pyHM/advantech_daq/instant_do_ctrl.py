@@ -1,6 +1,6 @@
 from _ctypes import Array
+from collections.abc import Iterable
 from ctypes import c_uint8
-from typing import Iterable
 
 from . import ErrorCode, Scenario
 from .api import instant_do_ctrl
@@ -12,7 +12,7 @@ class InstantDoCtrl(DIOCtrlBase):
         super().__init__(Scenario.InstantDO, dev_info, profile_path)
 
     def writeAny(self, start_port: int, data: Iterable[int]) -> ErrorCode:
-        """port count == len(data)"""
+        # port count == len(data)
         data = list(data)
         data_array = (c_uint8 * len(data))(*data)
         ret: int = instant_do_ctrl.write_any(

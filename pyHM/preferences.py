@@ -1,8 +1,9 @@
 from abc import abstractmethod
+from collections.abc import Hashable
 from functools import partial
 from logging import Logger, getLogger
 from math import ceil, floor
-from typing import Any, ClassVar, Hashable, Self, cast
+from typing import Any, ClassVar, Self, cast
 
 from qtpy.QtCore import QDateTime, QDir, Qt
 from qtpy.QtGui import QIcon
@@ -35,17 +36,17 @@ __all__ = ["Preferences"]
 class BaseLogger:
     logger: ClassVar[Logger]
 
-    def __new__[**_P](cls, *args: _P.args, **kwargs: _P.kwargs) -> Self:
+    def __new__[**P](cls, *args: P.args, **kwargs: P.kwargs) -> Self:
         cls.logger = getLogger(cls.__name__)
         return super().__new__(cls)
 
     @abstractmethod
-    def __init__[**_P](self, *args: _P.args, **kwargs: _P.kwargs) -> None:
+    def __init__[**P](self, *args: P.args, **kwargs: P.kwargs) -> None:
         pass
 
 
 class PreferencePage(BaseLogger, QScrollArea):
-    """A page of the Preferences dialog"""
+    """A page of the Preferences dialog."""
 
     def __init__(
         self,
@@ -188,7 +189,7 @@ class PreferencePage(BaseLogger, QScrollArea):
                     combobox_data = value2.combobox_data
                 else:
                     combobox_data = dict(enumerate(value2.combobox_data))
-                for index, (data, item) in enumerate(combobox_data.items()):
+                for data, item in combobox_data.items():
                     combo_box.addItem(settings.tr(item), data)
                 combo_box.setEditable(False)
                 combo_box.setCurrentText(combobox_data[current_value])
@@ -229,14 +230,14 @@ class PreferencePage(BaseLogger, QScrollArea):
 
 
 class PreferencesBody(BaseLogger, QSplitter):
-    """The main area of the GUI preferences dialog"""
+    """The main area of the GUI preferences dialog."""
 
     def __init__(self, settings: Settings, parent: QWidget | None = None) -> None:
         try:
             from qtawesome import icon  # import locally to avoid a circular import
         except ImportError:
 
-            def icon(*_, **__) -> QIcon:
+            def icon(*_: object, **__: object) -> QIcon:
                 return QIcon()
 
         BaseLogger.__init__(self)
@@ -302,7 +303,7 @@ class PreferencesBody(BaseLogger, QSplitter):
 
 
 class Preferences(QDialog):
-    """GUI preferences dialog"""
+    """GUI preferences dialog."""
 
     def __init__(self, settings: Settings, parent: QWidget | None = None) -> None:
         super().__init__(parent)

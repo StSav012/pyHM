@@ -1,7 +1,8 @@
+from collections.abc import Iterable
 from contextlib import suppress
-from datetime import datetime, timedelta, timezone, tzinfo
+from datetime import datetime, timedelta, tzinfo
 from json import loads
-from typing import Iterable, TypedDict, cast
+from typing import TypedDict, cast
 from urllib.request import urlopen
 
 __all__ = [
@@ -29,14 +30,17 @@ class GeoDataType(TypedDict, total=False):
 
 
 def guess_position() -> tuple[float, float]:
-    with suppress(Exception), urlopen(
-        url="https://geolocation-db.com/json",
-        timeout=1,
-    ) as url:
+    with (
+        suppress(Exception),
+        urlopen(
+            url="https://geolocation-db.com/json",
+            timeout=1,
+        ) as url,
+    ):
         data: GeoDataType = loads(url.read())
         return data["latitude"], data["longitude"]
 
-    tz_info: tzinfo | None = datetime.now(timezone.utc).astimezone().tzinfo
+    tz_info: tzinfo | None = datetime.now(datetime.UTC).astimezone().tzinfo
     if tz_info is not None:
         tz_offset: timedelta | None = tz_info.utcoffset(None)
         if tz_offset is not None:
@@ -88,10 +92,13 @@ def guess_weather(
         )
         for key, value in params.items()
     )
-    with suppress(Exception), urlopen(
-        url=f"https://api.open-meteo.com/v1/forecast?{encoded_params}",
-        timeout=1,
-    ) as url:
+    with (
+        suppress(Exception),
+        urlopen(
+            url=f"https://api.open-meteo.com/v1/forecast?{encoded_params}",
+            timeout=1,
+        ) as url,
+    ):
         data: WeatherDataType = loads(url.read())
         return data
     return {}

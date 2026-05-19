@@ -41,7 +41,7 @@ class AOFeatures:
 
     @property
     def externalRefAntiPolar(self) -> bool:
-        return True if ao_features.get_external_ref_anti_polar(self._obj) else False
+        return bool(ao_features.get_external_ref_anti_polar(self._obj))
 
     @property
     def externalRefRange(self) -> MathInterval:
@@ -52,7 +52,7 @@ class AOFeatures:
     # buffered ao->basic features
     @property
     def bufferedAoSupported(self) -> bool:
-        return True if ao_features.get_buffered_ao_supported(self._obj) else False
+        return bool(ao_features.get_buffered_ao_supported(self._obj))
 
     @property
     def samplingMethod(self) -> SamplingMethod:
@@ -86,7 +86,7 @@ class AOFeatures:
 
     @property
     def retriggerable(self) -> bool:
-        return True if ao_features.get_retriggerable(self._obj) else False
+        return bool(ao_features.get_retriggerable(self._obj))
 
     # trigger 0
     @property

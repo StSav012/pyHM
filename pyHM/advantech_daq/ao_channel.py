@@ -1,5 +1,5 @@
+from collections.abc import Iterable
 from ctypes import Array, c_int
-from typing import Iterable
 
 from . import ErrorCode, MapFuncPiece, ValueRange, utils
 from .api import ao_channel, is_error_code
@@ -74,8 +74,7 @@ class AOChannel:
             raise ValueError(
                 f"get scaleTable is failed, the error code is 0x{ret.value:X}"
             )
-        else:
-            return [buffer[i] for i in range(p_size[0])]
+        return [buffer[i] for i in range(p_size[0])]
 
     @scaleTable.setter
     def scaleTable(self, table: Iterable[MapFuncPiece]) -> None:

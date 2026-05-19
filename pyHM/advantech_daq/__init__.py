@@ -1,6 +1,5 @@
 from ctypes import Structure, c_double, c_int32, c_int64, c_uint8, c_wchar
 from enum import Enum, IntEnum
-from typing import Any
 
 __all__ = [
     "DAQ_NAVI_VER",
@@ -2560,8 +2559,8 @@ class DeviceInformation(Structure):
         DeviceNumber: int = -1,
         DeviceMode: AccessMode = AccessMode.ModeWrite,
         ModuleIndex: int = 0,
-        *args: Any,
-        **kwargs: Any,
+        *args: object,
+        **kwargs: object,
     ) -> None:
         super().__init__(*args, **kwargs)
         self.DeviceNumber = DeviceNumber

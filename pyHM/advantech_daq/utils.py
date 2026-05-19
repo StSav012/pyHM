@@ -1,11 +1,10 @@
 from _ctypes import Array
-from typing import Any
 
 from . import (
-    AccessMode,
-    ActiveSignal,
     AIChannelType,
     AISignalType,
+    AccessMode,
+    ActiveSignal,
     BaudRate,
     BurnoutRetType,
     CodingType,
@@ -14,9 +13,9 @@ from . import (
     CounterCascadeGroup,
     CountingType,
     CouplingType,
-    Depository,
     DIOPortDir,
     DOCircuitType,
+    Depository,
     ErrorRetType,
     EventId,
     FilterType,
@@ -72,7 +71,7 @@ def create_array[T](dtype: type[T], num: int) -> Array[T]:
     return (dtype * num)()
 
 
-def to_enum_item[T](enum_type: type[T], value: Any) -> T:
+def to_enum_item[T](enum_type: type[T], value: object) -> T:
     if value not in enum_type:
         raise ValueError(f"{enum_type.__name__} has no {value!r}")
     return enum_type(value)

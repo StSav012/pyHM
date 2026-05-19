@@ -17,11 +17,7 @@ from ctypes import (
 
 from .. import ErrorCode, MathInterval, ValueUnit
 
-c_uint_: type
-if platform.architecture()[0] == "32bit":
-    c_uint_ = c_uint32
-else:
-    c_uint_ = c_uint64
+c_uint_: type = c_uint32 if platform.architecture()[0] == "32bit" else c_uint64
 
 dll: CDLL
 if os.name == "nt":
@@ -76,6 +72,4 @@ def is_error_code(ret: ErrorCode | int) -> bool:
         raise TypeError("an int or an ErrorCode is required")
     if isinstance(ret, ErrorCode):
         ret = ret.value
-    if c_ulong(ret).value >= c_ulong(0xC0000000).value:
-        return True
-    return False
+    return c_ulong(ret).value >= c_ulong(0xC0000000).value

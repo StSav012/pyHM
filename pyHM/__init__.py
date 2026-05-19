@@ -1,9 +1,10 @@
 import sys
+from collections.abc import Callable, Iterable
 from functools import partial
 from math import isnan
-from typing import Callable, Final, Iterable
+from typing import Final
 
-from qtpy.QtCore import QDateTime, Qt, QThread, Slot, qVersion
+from qtpy.QtCore import QDateTime, QThread, Qt, Slot, qVersion
 from qtpy.QtGui import QCloseEvent, QKeySequence
 from qtpy.QtWidgets import (
     QApplication,
@@ -25,7 +26,7 @@ from qtpy.QtWidgets import (
 )
 
 from .chart_widget import ChartWidget
-from .constants import RECEIVER_MARK_TYPE, RECEIVERS, WAVELENGTHS
+from .constants import RECEIVERS, RECEIVER_MARK_TYPE, WAVELENGTHS
 from .preferences import Preferences
 from .settings import Settings
 from .thread_hm import ThreadHM
@@ -280,7 +281,7 @@ def run_gui() -> int:
     if PYQT_VERSION:
         # noinspection PyShadowingNames
         class QApplication(QApplication):
-            def __init__(self, *args, **kwargs):
+            def __init__(self, *args: object, **kwargs: object) -> None:
                 super().__init__(*args, **kwargs)
                 self.__class__._instance = QApplication.instance()
 

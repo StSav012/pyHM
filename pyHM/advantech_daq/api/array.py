@@ -1,17 +1,17 @@
+from collections.abc import Callable
 from ctypes import POINTER, c_byte, c_int, c_int32, c_int64, cast
-from typing import Callable
 
 from .. import (
+    AISignalType,
     AccessMode,
     ActiveSignal,
-    AISignalType,
     BurnoutRetType,
     CounterCapability,
     CounterCascadeGroup,
     CountingType,
     CouplingType,
-    DeviceTreeNode,
     DOCircuitType,
+    DeviceTreeNode,
     EventId,
     FilterType,
     FreqMeasureMethod,
@@ -60,8 +60,8 @@ __all__ = [
 ]
 
 
-def to_simple_type[_CT, T2](
-    dtype: type[_CT], TArrayObj: int, auto_free: bool
+def to_simple_type[CT, T2](
+    dtype: type[CT], TArrayObj: int, auto_free: bool
 ) -> list[T2]:
     if TArrayObj == 0 or get_length(TArrayObj) == 0:
         return []
@@ -69,7 +69,7 @@ def to_simple_type[_CT, T2](
     arr: list[T2] = []
     for i in range(count):
         item: int = get_item(TArrayObj, i)
-        int_obj: _CT = cast(item, POINTER(dtype)).contents
+        int_obj: CT = cast(item, POINTER(dtype)).contents
         arr.append(int_obj.value)
 
     if auto_free:

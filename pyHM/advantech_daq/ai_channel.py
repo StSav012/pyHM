@@ -1,6 +1,6 @@
 from _ctypes import Array
+from collections.abc import Iterable
 from ctypes import c_int32, c_wchar, create_unicode_buffer
-from typing import Iterable
 
 from . import (
     AISignalType,
@@ -243,8 +243,7 @@ class AIChannel:
             raise ValueError(
                 f"get scaleTable is failed, the error code is 0x{ret.value:X}"
             )
-        else:
-            return [buffer[i] for i in range(p_size[0])]
+        return [buffer[i] for i in range(p_size[0])]
 
     @scaleTable.setter
     def scaleTable(self, table: Iterable[MapFuncPiece]) -> None:

@@ -1,6 +1,7 @@
 from collections import deque
+from collections.abc import Collection
 from math import ceil, floor
-from typing import Collection, cast
+from typing import cast
 
 from qtpy.QtCharts import QChart, QChartView, QDateTimeAxis, QLineSeries, QValueAxis
 from qtpy.QtCore import QDateTime, QPointF, Qt, Slot

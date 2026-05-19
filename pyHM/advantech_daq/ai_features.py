@@ -52,7 +52,7 @@ class AIFeatures:
 
     @property
     def overallValueRange(self) -> bool:
-        return True if ai_features.get_overall_value_range(self._obj) else False
+        return bool(ai_features.get_overall_value_range(self._obj))
 
     @property
     def valueRanges(self) -> list[ValueRange]:
@@ -72,7 +72,7 @@ class AIFeatures:
 
     @property
     def overallConnection(self) -> bool:
-        return True if ai_features.get_overall_connection(self._obj) else False
+        return bool(ai_features.get_overall_connection(self._obj))
 
     @property
     def couplingTypes(self) -> list[CouplingType]:
@@ -105,7 +105,7 @@ class AIFeatures:
     # cjc features
     @property
     def thermoSupported(self) -> bool:
-        return True if ai_features.get_thermo_supported(self._obj) else False
+        return bool(ai_features.get_thermo_supported(self._obj))
 
     @property
     def cjcChannels(self) -> list[int]:
@@ -114,7 +114,7 @@ class AIFeatures:
     # buffered ai -> basic features
     @property
     def bufferedAiSupported(self) -> bool:
-        return True if ai_features.get_buffered_ai_supported(self._obj) else False
+        return bool(ai_features.get_buffered_ai_supported(self._obj))
 
     @property
     def samplingMethod(self) -> SamplingMethod:
@@ -144,7 +144,7 @@ class AIFeatures:
     # buffered ai -> burst scan
     @property
     def burstScanSupported(self) -> bool:
-        return True if ai_features.get_burst_scan_supported(self._obj) else False
+        return bool(ai_features.get_burst_scan_supported(self._obj))
 
     @property
     def scanClockSources(self) -> list[SignalDrop]:
@@ -167,7 +167,7 @@ class AIFeatures:
 
     @property
     def retriggerable(self) -> bool:
-        return True if ai_features.get_retriggerable(self._obj) else False
+        return bool(ai_features.get_retriggerable(self._obj))
 
     @property
     def triggerFilterTypes(self) -> list[FilterType]:

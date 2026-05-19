@@ -1,7 +1,8 @@
+from collections.abc import Hashable, Iterable, Iterator, Sequence
 from contextlib import contextmanager, suppress
 from math import nan
 from os import linesep
-from typing import Hashable, Iterable, Iterator, NamedTuple, Sequence
+from typing import NamedTuple
 
 from qtpy.QtCore import (
     QByteArray,
@@ -16,8 +17,8 @@ from qtpy.QtWidgets import QWidget
 from .constants import (
     DEFAULT_DELAY_BETWEEN_CYCLES,
     DEFAULT_MOTOR_STEP_ANGLE,
-    RECEIVER_MARK_TYPE,
     RECEIVERS,
+    RECEIVER_MARK_TYPE,
     WAVELENGTHS,
 )
 from .location import (

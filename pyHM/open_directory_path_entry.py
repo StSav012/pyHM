@@ -1,4 +1,5 @@
-from typing import ClassVar, Collection
+from collections.abc import Collection
+from typing import ClassVar
 
 from qtpy.QtCore import QFileInfo, Signal, Slot
 from qtpy.QtWidgets import QFileDialog, QHBoxLayout, QLineEdit, QToolButton, QWidget
@@ -69,7 +70,6 @@ class OpenDirectoryPathEntry(QWidget):
 
         if self._dialog.exec() == QFileDialog.DialogCode.Accepted:
             selected_files: list[str] = self._dialog.selectedFiles()
-            if selected_files:
-                if selected_files[0] != self._filename:
-                    self.setFilename(selected_files[0])
-                    self.changed.emit(self._filename)
+            if selected_files and selected_files[0] != self._filename:
+                self.setFilename(selected_files[0])
+                self.changed.emit(self._filename)

@@ -14,7 +14,7 @@ class NoiseFilterChannel:
 
     @property
     def enabled(self) -> bool:
-        return True if nos_flt_channel.get_enabled(self._obj) else False
+        return bool(nos_flt_channel.get_enabled(self._obj))
 
     @enabled.setter
     def enabled(self, value: bool) -> None:

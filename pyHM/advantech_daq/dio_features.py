@@ -1,6 +1,6 @@
 from ctypes import pointer
 
-from . import Depository, DOCircuitType, MathInterval, SignalDrop, utils
+from . import DOCircuitType, Depository, MathInterval, SignalDrop, utils
 from .api import array, dio_features
 
 __all__ = ["DIOFeatures"]
@@ -13,7 +13,7 @@ class DIOFeatures:
     # common
     @property
     def portProgrammable(self) -> bool:
-        return True if dio_features.get_port_programmable(self._obj) else False
+        return bool(dio_features.get_port_programmable(self._obj))
 
     @property
     def channelCountMax(self) -> int:
@@ -29,11 +29,11 @@ class DIOFeatures:
 
     @property
     def diSupported(self) -> bool:
-        return True if dio_features.get_di_supported(self._obj) else False
+        return bool(dio_features.get_di_supported(self._obj))
 
     @property
     def doSupported(self) -> bool:
-        return True if dio_features.get_do_supported(self._obj) else False
+        return bool(dio_features.get_do_supported(self._obj))
 
     @property
     def diDataMask(self) -> list[int]:
@@ -41,7 +41,7 @@ class DIOFeatures:
 
     @property
     def diNoiseFilterSupported(self) -> bool:
-        return True if dio_features.get_di_noise_filter_supported(self._obj) else False
+        return bool(dio_features.get_di_noise_filter_supported(self._obj))
 
     @property
     def diNoiseFilterOfChannels(self) -> list[int]:

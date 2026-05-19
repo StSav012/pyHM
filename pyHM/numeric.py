@@ -1,13 +1,12 @@
 from collections import deque
+from collections.abc import Sequence
 from math import cos, isnan, log, nan, radians, sqrt
-from typing import Sequence
 
 
 def min_square_method(
     x_and_y: Sequence[tuple[float, float]],
 ) -> tuple[float, float, float, float]:
-    """Определение параметров линейной зависимости методом наименьших квадратов"""
-
+    """Определение параметров линейной зависимости методом наименьших квадратов."""
     sx: float = 0.0
     sx2: float = 0.0
     sy: float = 0.0
@@ -46,7 +45,7 @@ def tau_by_min_square_method_kd(
     d: Sequence[float],
     d0: float,
 ) -> tuple[float, float, float, float]:
-    """Вычисление поглощения в атмосфере по углам и черному телу вписыванием exp"""
+    """Вычисление поглощения в атмосфере по углам и черному телу вписыванием exp."""
     # out:
     # tau: float
     # d_tau: float

@@ -11,9 +11,9 @@ from qtpy.QtCore import (
     QFile,
     QIODevice,
     QObject,
-    Qt,
     QTextStream,
     QThread,
+    Qt,
     Signal,
 )
 
@@ -31,8 +31,8 @@ from .constants import (
     DO_MOTOR_STEP_PULSE,
     ELEVATION_CAL,
     PHI_H2O_CAL,
-    RECEIVER_MARK_TYPE,
     RECEIVERS,
+    RECEIVER_MARK_TYPE,
     TAU_O2_CAL,
     WAVELENGTHS,
 )
@@ -82,7 +82,7 @@ class ThreadHM(QThread):
         # инициализация ЦАП
         self.instant_ao: InstantAOCtrl = InstantAOCtrl(DEVICE_DESCRIPTION)
         self._dac: Final[dict[RECEIVER_MARK_TYPE, list[float]]] = self.settings.dac
-        for receiver, channel in zip(RECEIVERS, self.instant_ao.channels):
+        for receiver, channel in zip(RECEIVERS, self.instant_ao.channels, strict=True):
             # find best output range
             min_dac: float = min(self._dac[receiver])
             max_dac: float = max(self._dac[receiver])
@@ -162,13 +162,12 @@ class ThreadHM(QThread):
             self.motor_position += self.settings.motor_const
 
     def motor_find_zero(self) -> None:
-        for i in range(500):
+        for _ in range(500):
             if self.motor_get_zero():
                 self.motor_position = -self.settings.angle_correction
                 self.motor_set_angle(0)
                 break
-            else:
-                self.motor_step(True)
+            self.motor_step(True)
 
     def motor_set_angle(self, angle: float) -> None:
         # разница положения в количестве шагов
@@ -179,7 +178,7 @@ class ThreadHM(QThread):
         if direction := (step_count < 0):
             step_count = -step_count
         # вращение
-        for i in range(step_count):
+        for _ in range(step_count):
             self.motor_step(direction)
 
     def pause(self, pause: bool = True) -> None:
@@ -276,8 +275,12 @@ class ThreadHM(QThread):
         ret: ErrorCode
 
         # Основной цикл...
-        while not self.isInterruptionRequested() and not self._is_last_loop and (
-            now := QDateTime.currentDateTime()  # < date_time_stop
+        while (
+            not self.isInterruptionRequested()
+            and not self._is_last_loop
+            and (
+                now := QDateTime.currentDateTime()  # < date_time_stop
+            )
         ):
             # Мотор -> 0
             self._emit_state(self.tr("Mirror → “0”"))
@@ -425,10 +428,11 @@ class ThreadHM(QThread):
                                     ]
                                     for channel in range(channel_count):
                                         str_buf.append(
-                                            "%e"
-                                            % data_adc[period][cycle][
-                                                sample * sample_count + channel
-                                            ]
+                                            "{:e}".format(
+                                                data_adc[period][cycle][
+                                                    sample * sample_count + channel
+                                                ]
+                                            )
                                         )
                                     file_adc_stream << "\t".join(str_buf) << "\n"
 
@@ -476,7 +480,7 @@ class ThreadHM(QThread):
             description: str = ""
 
             for receiver, wavelength in zip(RECEIVERS, WAVELENGTHS, strict=True):
-                description += "Пр.{}мм:".format(wavelength)
+                description += f"Пр.{wavelength}мм:"
 
                 a: float
                 b: float = nan
@@ -484,7 +488,7 @@ class ThreadHM(QThread):
                 index = len(angles) - 1
                 while index > 0:
                     angle = angles[index]
-                    description += "Угол{}:".format(index)
+                    description += f"Угол{index}:"
                     # первый косинус
                     a = cos(radians(angle))
                     if a == 0.0:
@@ -554,7 +558,7 @@ class ThreadHM(QThread):
                     file_data_stream
                     << "\t".join(
                         map(
-                            lambda x: "%5.4e" % x,
+                            "{:5.4e}".format,
                             (
                                 data_res[receiver],
                                 tau0[receiver],
@@ -575,7 +579,7 @@ class ThreadHM(QThread):
             for receiver in RECEIVERS:
                 (
                     file_data_stream
-                    << "\t".join(map(lambda x: "%5.4e" % x, data_sd[receiver]))
+                    << "\t".join(map("{:5.4e}".format, data_sd[receiver]))
                     << "\t"
                 )
             file_data_stream << description << "\n"
