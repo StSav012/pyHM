@@ -7,7 +7,16 @@ from math import isnan
 from pathlib import Path
 from typing import BinaryIO, Final
 
-from qtpy.QtCore import QDateTime, QLibraryInfo, QLocale, QThread, QTranslator, Qt, Slot, qVersion
+from qtpy.QtCore import (
+    QDateTime,
+    QLibraryInfo,
+    QLocale,
+    QThread,
+    QTranslator,
+    Qt,
+    Slot,
+    qVersion,
+)
 from qtpy.QtGui import QCloseEvent, QKeySequence
 from qtpy.QtWidgets import (
     QApplication,
@@ -194,13 +203,15 @@ class MainWindow(QMainWindow):
 
     def _install_translation(self) -> None:
         def find_qm_files(
-                root: str | os.PathLike[str] | None = None,
-                *,
-                exclude: Collection[str | os.PathLike[str]] = frozenset(),
+            root: str | os.PathLike[str] | None = None,
+            *,
+            exclude: Collection[str | os.PathLike[str]] = frozenset(),
         ) -> Iterator[Path]:
             if root is None:
                 root = Path.cwd()
-            magic: Final[bytes] = b'<\xb8d\x18\xca\xef\x9c\x95\xcd!\x1c\xbf`\xa1\xbd\xdd'
+            magic: Final[bytes] = (
+                b"<\xb8d\x18\xca\xef\x9c\x95\xcd!\x1c\xbf`\xa1\xbd\xdd"
+            )
             exclude = frozenset(map(Path, exclude))
 
             def list_files(path: Path) -> set[Path]:
@@ -233,23 +244,20 @@ class MainWindow(QMainWindow):
             ]
         )
         for qm_file in find_qm_files(
-                root=qt_translations_path, exclude=[sys.exec_prefix]
+            root=qt_translations_path, exclude=[sys.exec_prefix]
         ):
             qt_translator: QTranslator = QTranslator(self)
             if (
-                    qt_translator.load(str(qm_file))
-                    and qt_translator.language() in ui_languages
+                qt_translator.load(str(qm_file))
+                and qt_translator.language() in ui_languages
             ):
                 QApplication.installTranslator(qt_translator)
         for qm_file in find_qm_files(
-                root=Path(__file__).parent / "i10n",
-                exclude=[qt_translations_path, sys.exec_prefix],
+            root=Path(__file__).parent / "i10n",
+            exclude=[qt_translations_path, sys.exec_prefix],
         ):
             translator: QTranslator = QTranslator(self)
-            if (
-                    translator.load(str(qm_file))
-                    and translator.language() in ui_languages
-            ):
+            if translator.load(str(qm_file)) and translator.language() in ui_languages:
                 QApplication.installTranslator(translator)
 
     def about(self) -> None:
