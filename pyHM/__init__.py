@@ -1,10 +1,13 @@
+import os
 import sys
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Collection, Iterable, Iterator
+from contextlib import suppress
 from functools import partial
 from math import isnan
-from typing import Final
+from pathlib import Path
+from typing import BinaryIO, Final
 
-from qtpy.QtCore import QDateTime, QThread, Qt, Slot, qVersion
+from qtpy.QtCore import QDateTime, QLibraryInfo, QLocale, QThread, QTranslator, Qt, Slot, qVersion
 from qtpy.QtGui import QCloseEvent, QKeySequence
 from qtpy.QtWidgets import (
     QApplication,
@@ -60,6 +63,8 @@ class MainWindow(QMainWindow):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setObjectName(self.__class__.__name__)
+
+        self._install_translation()
 
         self.setWindowTitle(QApplication.applicationName())
 
@@ -186,6 +191,66 @@ class MainWindow(QMainWindow):
         )
         self.thread_hm.dataObtained.connect(self._on_thread_data_obtained)
         self.thread_hm.start(QThread.Priority.TimeCriticalPriority)
+
+    def _install_translation(self) -> None:
+        def find_qm_files(
+                root: str | os.PathLike[str] | None = None,
+                *,
+                exclude: Collection[str | os.PathLike[str]] = frozenset(),
+        ) -> Iterator[Path]:
+            if root is None:
+                root = Path.cwd()
+            magic: Final[bytes] = b'<\xb8d\x18\xca\xef\x9c\x95\xcd!\x1c\xbf`\xa1\xbd\xdd'
+            exclude = frozenset(map(Path, exclude))
+
+            def list_files(path: Path) -> set[Path]:
+                files: set[Path] = set()
+                if path not in exclude:
+                    if path.is_dir():
+                        with suppress(PermissionError):
+                            for child in path.iterdir():
+                                if (child := child.resolve()) not in files:
+                                    files.update(list_files(child))
+                    elif path.is_file():
+                        files.add(path.resolve())
+                return files
+
+            file: Path
+            f_in: BinaryIO
+            for file in list_files(Path(root)):
+                with suppress(Exception), open(file, "rb") as f_in:
+                    if f_in.read(len(magic)) == magic:
+                        yield file
+
+        qt_translations_path: str = QLibraryInfo.path(
+            QLibraryInfo.LibraryPath.TranslationsPath
+        )
+        current_locale: QLocale = self.locale()
+        ui_languages: frozenset[str] = frozenset(
+            [
+                *current_locale.uiLanguages(),
+                *map(lambda s: s.replace("-", "_"), current_locale.uiLanguages()),
+            ]
+        )
+        for qm_file in find_qm_files(
+                root=qt_translations_path, exclude=[sys.exec_prefix]
+        ):
+            qt_translator: QTranslator = QTranslator(self)
+            if (
+                    qt_translator.load(str(qm_file))
+                    and qt_translator.language() in ui_languages
+            ):
+                QApplication.installTranslator(qt_translator)
+        for qm_file in find_qm_files(
+                root=Path(__file__).parent / "i10n",
+                exclude=[qt_translations_path, sys.exec_prefix],
+        ):
+            translator: QTranslator = QTranslator(self)
+            if (
+                    translator.load(str(qm_file))
+                    and translator.language() in ui_languages
+            ):
+                QApplication.installTranslator(translator)
 
     def about(self) -> None:
         QMessageBox.about(
