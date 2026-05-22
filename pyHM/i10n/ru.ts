@@ -203,7 +203,7 @@
     <message>
         <location filename="../pyHM/settings.py" line="130"/>
         <source>Zero angle signal:</source>
-        <translation>Сигнал нудевого угла:</translation>
+        <translation>Сигнал нулевого угла:</translation>
     </message>
     <message>
         <location filename="../pyHM/settings.py" line="127"/>
