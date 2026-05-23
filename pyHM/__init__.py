@@ -275,11 +275,11 @@ class MainWindow(QMainWindow):
         self.stop_button.setDisabled(True)
         self.status_bar.showMessage(self.tr("Measurement ended."))
 
-    @Slot()
+    @Slot(bool)
     def _on_pause_button_toggled(self, on: bool) -> None:
         self.thread_hm.pause(on)
 
-    @Slot()
+    @Slot(bool)
     def _on_stop_soon_button_toggled(self, on: bool) -> None:
         self.thread_hm.make_last_loop(on)
 
