@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 from contextlib import suppress
-from datetime import datetime, timedelta, tzinfo
+from datetime import UTC, datetime, timedelta, tzinfo
 from json import loads
 from typing import TypedDict, cast
 from urllib.request import urlopen
@@ -40,7 +40,7 @@ def guess_position() -> tuple[float, float]:
         data: GeoDataType = loads(url.read())
         return data["latitude"], data["longitude"]
 
-    tz_info: tzinfo | None = datetime.now(datetime.UTC).astimezone().tzinfo
+    tz_info: tzinfo | None = datetime.now(UTC).astimezone().tzinfo
     if tz_info is not None:
         tz_offset: timedelta | None = tz_info.utcoffset(None)
         if tz_offset is not None:
