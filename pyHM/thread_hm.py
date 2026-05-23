@@ -467,8 +467,11 @@ class ThreadHM(QThread):
                             )
                         )
 
-                while self._is_paused:
-                    QThread.sleep(16)
+                if self._is_paused:
+                    self._emit_state(self.tr("Paused"))
+                    while self._is_paused:
+                        QThread.sleep(16)
+                    self._emit_state(self.tr("Resumed"))
 
             # углы измерения
 
