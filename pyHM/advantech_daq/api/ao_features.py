@@ -154,7 +154,7 @@ def get_trigger_delay_range(
     aoFeatureObj: int,
     trigger: int,
     mathIntervalX: "_Pointer[MathInterval]",
-):
+) -> object:
     dll.TAoFeatures_getTriggerDelayRange.argtypes = [
         c_uint_,
         c_int32,
