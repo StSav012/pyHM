@@ -22,7 +22,6 @@ from qtpy.QtWidgets import (
     QApplication,
     QCheckBox,
     QDockWidget,
-    QHBoxLayout,
     QMainWindow,
     QMenu,
     QMenuBar,
@@ -37,6 +36,7 @@ from qtpy.QtWidgets import (
     QWidget,
 )
 
+from .auto_box_layout import AutoBoxLayout
 from .chart_widget import ChartWidget
 from .constants import RECEIVERS, RECEIVER_MARK_TYPE, WAVELENGTHS
 from .preferences import Preferences
@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
         controls_dock.setObjectName("ControlsDock")
         controls_widget: QWidget = QWidget(controls_dock)
         controls_dock.setWidget(controls_widget)
-        controls_layout: QHBoxLayout = QHBoxLayout()
+        controls_layout: AutoBoxLayout = AutoBoxLayout()
         controls_widget.setLayout(controls_layout)
         self.pause_button: QPushButton = QPushButton(self.tr("&Pause"), self)
         self.pause_button.setCheckable(True)
