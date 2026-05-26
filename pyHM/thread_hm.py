@@ -221,7 +221,9 @@ class ThreadHM(QThread):
             )
         )
         if not file_data.open(
-            QIODevice.OpenModeFlag.WriteOnly | QIODevice.OpenModeFlag.Text
+            QIODevice.OpenModeFlag.WriteOnly
+            | QIODevice.OpenModeFlag.Text
+            | QIODevice.OpenModeFlag.Unbuffered
         ):
             self._emit_state(
                 self.tr("Error {}: {}").format(
@@ -256,7 +258,6 @@ class ThreadHM(QThread):
                 << "\t"
             )
         file_data_stream << "Описание" << "\n"
-        file_data_stream.flush()
 
         self.dataFileChanged.emit(file_data.fileName())
 
@@ -410,7 +411,9 @@ class ThreadHM(QThread):
                         )
                     )
                     if file_adc.open(
-                        QIODevice.OpenModeFlag.WriteOnly | QIODevice.OpenModeFlag.Text
+                        QIODevice.OpenModeFlag.WriteOnly
+                        | QIODevice.OpenModeFlag.Text
+                        | QIODevice.OpenModeFlag.Unbuffered
                     ):
                         file_adc_stream: QTextStream = QTextStream(file_adc)
                         for cycle in range(cycle_count):
@@ -586,7 +589,6 @@ class ThreadHM(QThread):
                     << "\t"
                 )
             file_data_stream << description << "\n"
-            file_data_stream.flush()
 
             # данные на форму
             for receiver in RECEIVERS:
