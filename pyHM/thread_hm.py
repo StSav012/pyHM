@@ -11,7 +11,6 @@ from qtpy.QtCore import (
     QFile,
     QIODevice,
     QObject,
-    QTextStream,
     QThread,
     Qt,
     Signal,
@@ -49,6 +48,17 @@ logging.basicConfig(
         getenv("LOG_LEVEL", "").upper(), logging.INFO
     )
 )
+
+
+# noinspection PyPep8Naming
+class QStringFile(QFile):
+    def writeString(self, *s: str | ..., sep: str = "") -> int:
+        if s[-1] is ...:
+            s = *s[:-1], ""
+        return self.write(sep.join(s).encode("utf-8"))
+
+    def writeLine(self, *s: str | ..., sep: str = "") -> int:
+        return self.writeString(*s, "\n", sep=sep)
 
 
 class ThreadHM(QThread):
@@ -215,7 +225,7 @@ class ThreadHM(QThread):
                 result_dir.cd(parent)
 
         # Создание файла с результатом
-        file_data: QFile = QFile(
+        file_data: QStringFile = QStringFile(
             result_dir.filePath(
                 QDateTime.currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".dat"
             )
@@ -232,32 +242,25 @@ class ThreadHM(QThread):
             )
             return
 
-        file_data_stream: QTextStream = QTextStream(file_data)
-        file_data_stream << self.settings.toString() << "\n"
-        file_data_stream << "[Данные]" << "\n"
+        file_data.writeLine(self.settings.toString())
+        file_data.writeLine("[Данные]")
         for wavelength in WAVELENGTHS:
-            (
-                file_data_stream
-                << "\t".join(
-                    (
-                        f"{wavelength}мм_2Угла",
-                        f"{wavelength}мм_{len(angles) - 1}Углов",
-                        "   +/-   ",
-                        f"{wavelength}мм Q г/см2",
-                    )
-                )
-                << "\t"
+            file_data.writeString(
+                f"{wavelength}мм_2Угла",
+                f"{wavelength}мм_{len(angles) - 1}Углов",
+                "   +/-   ",
+                f"{wavelength}мм Q г/см2",
+                ...,
+                sep="\t",
             )
-        file_data_stream << "\t".join(("Дата/Время_наблюдения", "TDateTime")) << "\t"
+        file_data.writeString("Дата/Время_наблюдения", "TDateTime", ..., sep="\t")
         for wavelength in WAVELENGTHS:
-            (
-                file_data_stream
-                << "\t".join(
-                    f"{wavelength}мм_SD_{index}" for index in range(len(angles))
-                )
-                << "\t"
+            file_data.writeString(
+                *(f"{wavelength}мм_SD_{index}" for index in range(len(angles))),
+                ...,
+                sep="\t",
             )
-        file_data_stream << "Описание" << "\n"
+        file_data.writeLine("Описание")
 
         self.dataFileChanged.emit(file_data.fileName())
 
@@ -405,7 +408,7 @@ class ThreadHM(QThread):
 
                 # сохранение служебного файла
                 if save_adc:
-                    file_adc: QFile = QFile(
+                    file_adc: QStringFile = QStringFile(
                         result_dir.filePath(
                             now.toString("yyyy-MM-dd_hh-mm-ss-zzz") + ".dat"
                         )
@@ -415,7 +418,6 @@ class ThreadHM(QThread):
                         | QIODevice.OpenModeFlag.Text
                         | QIODevice.OpenModeFlag.Unbuffered
                     ):
-                        file_adc_stream: QTextStream = QTextStream(file_adc)
                         for cycle in range(cycle_count):
                             self._emit_state(
                                 self.tr("Saving debug data…"),
@@ -437,29 +439,22 @@ class ThreadHM(QThread):
                                                 ]
                                             )
                                         )
-                                    file_adc_stream << "\t".join(str_buf) << "\n"
+                                    file_adc.writeLine(str_buf, sep="\t")
 
-                        (
-                            file_adc_stream
-                            << "\t".join(("Receiver", "Angle", "SD", "Mean"))
-                            << "\n"
-                        )
+                        file_adc.writeLine("Receiver", "Angle", "SD", "Mean", sep="\t")
 
                         for receiver in RECEIVERS:
-                            (
-                                file_adc_stream
-                                << "\t".join(
-                                    map(
-                                        str,
-                                        (
-                                            receiver,
-                                            index,
-                                            data_sd[receiver][index],
-                                            data_mean[receiver][index],
-                                        ),
-                                    )
-                                )
-                                << "\n"
+                            file_adc.writeLine(
+                                *map(
+                                    str,
+                                    (
+                                        receiver,
+                                        index,
+                                        data_sd[receiver][index],
+                                        data_mean[receiver][index],
+                                    ),
+                                ),
+                                sep="\t",
                             )
 
                         file_adc.close()
@@ -560,35 +555,31 @@ class ThreadHM(QThread):
             # Сохранение данных
             self._emit_state(self.tr("Saving data…"))
             for receiver in RECEIVERS:
-                (
-                    file_data_stream
-                    << "\t".join(
-                        map(
-                            "{:5.4e}".format,
-                            (
-                                data_res[receiver],
-                                tau0[receiver],
-                                d_tau[receiver],
-                                q_g_per_sm2[receiver],
-                            ),
-                        )
-                    )
-                    << "\t"
+                file_data.writeString(
+                    *map(
+                        "{:5.4e}".format,
+                        (
+                            data_res[receiver],
+                            tau0[receiver],
+                            d_tau[receiver],
+                            q_g_per_sm2[receiver],
+                        ),
+                    ),
+                    ...,
+                    sep="\t",
                 )
-            (file_data_stream << now.toString(Qt.DateFormat.ISODate) << "\t")
-            # time as number
-            (
-                file_data_stream
-                << QDateTime(1899, 12, 29, 23, 30, 17).msecsTo(now) / 86400e3
-                << "\t"
+            file_data.writeString(
+                now.toString(Qt.DateFormat.ISODate),
+                # time as number
+                str(QDateTime(1899, 12, 29, 23, 30, 17).msecsTo(now) / 86400e3),
+                ...,
+                sep="\t",
             )
             for receiver in RECEIVERS:
-                (
-                    file_data_stream
-                    << "\t".join(map("{:5.4e}".format, data_sd[receiver]))
-                    << "\t"
+                file_data.writeString(
+                    *map("{:5.4e}".format, data_sd[receiver]), ..., sep="\t"
                 )
-            file_data_stream << description << "\n"
+            file_data.writeLine(description)
 
             # данные на форму
             for receiver in RECEIVERS:
