@@ -3,7 +3,7 @@ import traceback
 from contextlib import suppress
 from math import cos, exp, isnan, log, nan, radians
 from os import getenv
-from typing import ClassVar, Final
+from typing import ClassVar, Final, Literal
 
 from qtpy.QtCore import (
     QDateTime,
@@ -52,12 +52,12 @@ logging.basicConfig(
 
 # noinspection PyPep8Naming
 class QStringFile(QFile):
-    def writeString(self, *s: str | ..., sep: str = "") -> int:
-        if s[-1] is ...:
-            s = *s[:-1], ""
-        return self.write(sep.join(s).encode("utf-8"))
+    def writeString(self, *s: str | Literal[...], sep: str = "") -> int:
+        return self.write(
+            sep.join(("" if _s is ... else _s) for _s in s).encode("utf-8")
+        )
 
-    def writeLine(self, *s: str | ..., sep: str = "") -> int:
+    def writeLine(self, *s: str | Literal[...], sep: str = "") -> int:
         return self.writeString(*s, "\n", sep=sep)
 
 
