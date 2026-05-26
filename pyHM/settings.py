@@ -3,7 +3,6 @@ import re
 from collections.abc import Collection, Hashable, Iterable, Iterator, Sequence
 from contextlib import contextmanager, suppress
 from math import nan
-from os import linesep
 from pathlib import Path
 from typing import Any, NamedTuple, overload
 
@@ -431,7 +430,7 @@ class QSettings(QObject):
                     key = key.replace("%", "%25")
                     lines.append(f"{key} = {value}")
             lines.append("")
-        Path(self.fileName()).write_text(linesep.join(lines), encoding="utf-8")
+        Path(self.fileName()).write_text("\n".join(lines), encoding="utf-8")
         return
 
 
@@ -474,7 +473,7 @@ class Settings(QSettings):
             lines.append("")
         for key in self.childKeys():
             lines.append(f"{key} = {self.value(key)}")
-        return linesep.join(lines)
+        return "\n".join(lines)
 
     def dialog(
         self,
